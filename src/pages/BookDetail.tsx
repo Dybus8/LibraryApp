@@ -1,6 +1,8 @@
+import React = require("react")
 import { Book } from "../App"
 import { DataLoader } from "../DataLoader"
-import { ApiData } from "../dataLoaders"
+import { ApiData, Idle, Pending } from "../dataLoaders"
+import { useParams } from "react-router"
 
 interface BookDetailProps {
     book: ApiData<Book>
@@ -10,6 +12,12 @@ interface BookDetailProps {
 }
 
 export const BookDetail = (props: BookDetailProps) => {
+    const [state, setState] = React.useState<BookState>({book: Idle()})
+    const { id } = useParams<useParams>()
+    if (props.book.kind == 'idle'){
+        
+        setState(s => ({...s, book: Pending(GetBookById("1"))}))
+    }
     if (props.book.kind != 'fullfilled') return <DataLoader<Book>
         data={props.book}
         onLoaded={props.onLoaded}
